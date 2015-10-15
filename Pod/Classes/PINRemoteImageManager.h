@@ -47,6 +47,12 @@ typedef NS_ENUM(NSUInteger, PINRemoteImageManagerDownloadOptions) {
     PINRemoteImageManagerDownloadOptionsSkipEarlyCheck = 1 << 2,
     /** Save processed images as JPEGs in the cache. The default is PNG to support transparency */
     PINRemoteImageManagerSaveProcessedImageAsJPEG = 1 << 3,
+    /**
+     * By default, placeholder images are loaded while the image is loading. This flag will delay the loading
+     * of the placeholder image until after the image has finished loading.
+     */
+    PINRemoteImageManagerDelayPlaceholder = 1 << 4,
+    
 };
 
 /**
