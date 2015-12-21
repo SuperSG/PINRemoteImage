@@ -128,14 +128,24 @@ typedef void (^PINRemoteImageManagerDataCompletion)(NSData *data, NSError *error
 
 @implementation PINRemoteImageManager
 
+static PINRemoteImageManager *sharedImageManager = nil;
+static dispatch_once_t sharedDispatchToken;
+
 + (instancetype)sharedImageManager
 {
-    static PINRemoteImageManager *sharedImageManager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    dispatch_once(&sharedDispatchToken, ^{
         sharedImageManager = [[[self class] alloc] init];
     });
     return sharedImageManager;
+}
+
++ (void)setSharedImageManagerWithConfiguration:(NSURLSessionConfiguration *)configuration
+{
+    NSAssert(sharedImageManager == nil, @"sharedImageManager singleton is already configured");
+
+    dispatch_once(&sharedDispatchToken, ^{
+        sharedImageManager = [[[self class] alloc] initWithSessionConfiguration:configuration];
+    });
 }
 
 - (instancetype)init
@@ -834,8 +844,8 @@ typedef void (^PINRemoteImageManagerDataCompletion)(NSData *data, NSError *error
     
     __weak typeof(self) weakSelf = self;
     PINDataTaskOperation *dataTaskOperation = [PINDataTaskOperation dataTaskOperationWithSessionManager:self.sessionManager
-                                                                                              request:request
-                                                                                    completionHandler:^(NSURLResponse *response, NSError *error)
+                                                                                                request:request
+                                                                                      completionHandler:^(NSURLResponse *response, NSError *error)
     {
         typeof(self) strongSelf = weakSelf;
 #if DEBUG

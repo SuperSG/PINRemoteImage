@@ -11,7 +11,6 @@
 
 #import "PINRemoteImageManagerResult.h"
 
-@class FLAnimatedImage;
 @class PINCache;
 @class PINRemoteImageManagerResult;
 
@@ -36,7 +35,7 @@ typedef NS_ENUM(NSUInteger, PINRemoteImageManagerError) {
 /**
  Options with which to download and process images
  */
-typedef NS_ENUM(NSUInteger, PINRemoteImageManagerDownloadOptions) {
+typedef NS_OPTIONS(NSUInteger, PINRemoteImageManagerDownloadOptions) {
     /** Download and process with default options (no other options set) */
     PINRemoteImageManagerDownloadOptionsNone = 0,
     /** Regardless of the image type downloaded, return UIImages and *not* FLAnimatedImage */
@@ -134,6 +133,13 @@ typedef void(^PINRemoteImageManagerAuthenticationChallenge)(NSURLSessionTask *ta
  @return Shared instance of PINRemoteImageManager
  */
 + (instancetype)sharedImageManager;
+
+/**
+ Sets the shared instance of PINRemoteImageManager to an instance with the supplied configuration. If configuration is nil, [NSURLSessionConfiguration defaultConfiguration] is used. You specify a custom configuration if you need to configure timeout values, cookie policies, additional HTTP headers, etc. This method should not be used if the shared instance has already been created.
+
+ @param configuration The configuration used to create the PINRemoteImageManager.
+ */
++ (void)setSharedImageManagerWithConfiguration:(NSURLSessionConfiguration *)configuration;
 
 /**
  The result of this method is assigned to self.cache in init. If you wish to provide a customized cache to the manager you can subclass PINRemoteImageManager and return a custom PINCache from this method.
